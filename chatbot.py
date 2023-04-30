@@ -1,16 +1,18 @@
-from langchain.llms import OpenAI
 from PyPDF2 import PdfReader
 from langchain.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
+from langchain.chat_models import ChatOpenAI
+
 import requests
 import os
-from apikey import apikey
 from prompt import prompt
+from dotenv import load_dotenv
 
 URL = "https://www.dropbox.com/s/9npstuvp2vhnq4z/Untitled%205.pdf?dl=1"
 FILE_NAME = "file.pdf"
+MAX_TOKENS = 4096
 
 
 def upload_and_split_text():
@@ -34,19 +36,23 @@ def upload_and_split_text():
 
 
 def load_embeddings():
-    os.environ["OPENAI_API_KEY"] = apikey
+    load_dotenv()
+    openai_api_key = os.environ.get("OPENAI_API_KEY")
 
     texts = upload_and_split_text()
 
-    embeddings = OpenAIEmbeddings()
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
     docsearch = FAISS.from_texts(texts, embeddings)
 
-    chain = load_qa_chain(OpenAI(), chain_type="stuff", prompt=prompt)
+    chain = load_qa_chain(ChatOpenAI(model_name='gpt-3.5-turbo'), chain_type="stuff", prompt=prompt)
 
     return docsearch, chain
 
 
 def get_response(message, docsearch, chain):
-    docs = docsearch.similarity_search(message)
-    answer = chain.run(input_documents=docs, question=message)
+    if len(message) > MAX_TOKENS:
+        answer = f"Message exceeds maximum allowed length of {MAX_TOKENS} tokens"
+    else:
+        docs = docsearch.similarity_search(message)
+        answer = chain.run(input_documents=docs, question=message)
     return answer
