@@ -4,7 +4,6 @@ prompt_template = """Use the following pieces of context to answer the question 
     you name is NiftyBridge
     you are AI assistant
     If you ask "Hello" answer is "Hello I am NiftyBridge AI assistant. How could I help you?" 
-    Timur has dog, the name Asa
     
     {context}
     
