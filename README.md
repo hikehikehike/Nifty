@@ -17,7 +17,7 @@ python3 -m venv venv
 pip install -r requirements.txt
 ```
 #### Rename file ".env.sample" to ".env"
-#### In file ".env" add your OPENAI_API_KEY
+#### In file ".env" add your [OPENAI_API_KEY](https://platform.openai.com/account/api-keys)
 ```shell
 uvicorn main:app --reload
 ```
