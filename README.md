@@ -31,7 +31,7 @@ git clone https://github.com/hikehikehike/Nifty
 cd Nifty
 ```
 #### Rename file ".env.sample" to ".env"
-#### In file ".env" add your OPENAI_API_KEY
+#### In file ".env" add your [OPENAI_API_KEY](https://platform.openai.com/account/api-keys)
 ```shell
 docker build -t nifty .
 docker run -p 8000:8000 nifty
